@@ -1,0 +1,107 @@
+body {
+  font: 1em sans-serif;
+    align-self: center;
+}
+#tabs{
+    width:  80%;
+    align-self: center;
+}
+#forceLayout{
+    width:  80%;
+    color:  white;
+}
+#quickCal{
+    width:  80%;
+    color:  white;
+}
+h1{
+	color: #18453B;
+}
+
+/*force diagram*/
+.link {
+  fill: none;
+  stroke: #CCC;
+  stroke-width: 1.5px;
+}
+
+.node circle {
+  fill: #0db14b ;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+text {
+  font: 1em sans-serif;
+  pointer-events: none;
+    fill:      white;
+    stroke:      white;
+}
+.ui-tabs .ui-tabs-nav .ui-tabs-anchor {
+    background-color: #dc651e ;
+    border: none;
+    color: white;
+}
+.ui-widget-header{
+    border: none;
+    background-image: linear-gradient(to bottom, #dc651e  0%, #dc651e  100%);
+}
+.ui-widget-content {
+    background: #007dc5;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: thin;
+    border-color:   #007dc5;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+padding-bottom: 0px;
+    border: thin;
+    border-color:   #007dc5;
+}
+.ui-tabs .ui-tabs-panel {
+}
+
+/*calendar*/
+}
+#calEvent{
+    background-color:   #F0EFEF;
+    color:              #007dc5;
+    width:              400;
+    height:             100px;
+    float:              left;
+    padding:            5px;
+    margin-left:        10px;
+    margin-top:         5px;
+    margin-bottom:      5px;
+}
+.box{
+    width:              29em;
+    color:              white;
+    padding:            1em;
+	margin-left:		1em;
+    margin-top:         1em;
+    font-size:          1em;
+}
+.calButton{
+    background-color:   #dc651e;
+    border-radius:      .25em;
+    color:              white;
+    font-size:          1em;
+    padding:            .25em;
+    border:             none;
+}
+button{
+    background-color:   #dc651e;
+    border-radius:      .25em;
+    color:              white;
+    font-size:          1em;
+    padding:            .25em;
+    border:             none;
+}
+#heading{
+    color:              white ;
+    font-size:          1em;
+}
+input{
+    font-size:  1em;
+}
