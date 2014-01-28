@@ -1,6 +1,10 @@
 $( document ).ready(function(){
 	//initialize tabs when page first loads
 	$( "#tabs" ).tabs();
+    simpleGlobe();
+    //Open Resume
+    /*$("#resumeDiv").load('TimothySlonczResume.htm');*/
+            
 
     //force diagram
     var links = [
@@ -27,7 +31,7 @@ links.forEach(function(link) {
   link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
 });
 
-var width = 660,
+var width = 760,
     height = 400;
 
 var force = d3.layout.force()
@@ -389,3 +393,317 @@ function checkExists(){
 	 });
 }
 // END QUERY EVENTS FUNCTION
+
+//Create Globe
+function createGlobe()
+{
+    
+    var width = 960,
+    height = 500;
+
+var projection = d3.geo.orthographic()
+    .scale(250)
+    .translate([width / 2, height / 2])
+    .clipAngle(90);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var λ = d3.scale.linear()
+    .domain([0, width])
+    .range([-180, 180]);
+
+var φ = d3.scale.linear()
+    .domain([0, height])
+    .range([90, -90]);
+
+var svg = d3.select("#globeDiv").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+svg.on("mousemove", function() {
+  var p = d3.mouse(this);
+  projection.rotate([λ(p[0]), φ(p[1])]);
+  svg.selectAll("path").attr("d", path);
+});
+
+d3.json("world-110m.json", function(error, world) {
+  svg.append("path")
+      .datum(topojson.feature(world, world.objects.land))
+      .attr("class", "land")
+      .attr("d", path);
+});
+}
+
+//polygon Globe
+function polygonGlobe()
+{
+    var width = 600,
+    height = width;
+
+var projection = d3.geo.orthographic()
+    .translate([width / 2, height / 2])
+    .scale(295)
+    .clipAngle(90)
+    .precision(.1)
+    .rotate([0, -30]);
+    // There is a clipping bug, fixed in branch geo-clip-good
+    //.rotate([-103.5, -20, 0]);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var graticule = d3.geo.graticule()();
+
+var svg = d3.select("#globe").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .call(d3.behavior.drag()
+      .origin(function() { var rotate = projection.rotate(); return {x: 2 * rotate[0], y: -2 * rotate[1]}; })
+      .on("drag", function() {
+        projection.rotate([d3.event.x / 2, -d3.event.y / 2, projection.rotate()[2]]);
+        svg.selectAll("path").attr("d", path);
+      }));
+
+var hatch = svg.append("defs").append("pattern")
+    .attr("id", "hatch")
+    .attr("patternUnits", "userSpaceOnUse")
+    .attr("width", 8)
+    .attr("height", 8)
+  .append("g");
+hatch.append("path").attr("d", "M0,0L8,8");
+hatch.append("path").attr("d", "M8,0L0,8");
+
+svg.append("path")
+    .datum({type: "Sphere"})
+    .attr("class", "background")
+    .attr("d", path);
+
+svg.append("path")
+    .datum(graticule)
+    .attr("class", "graticule")
+    .attr("d", path);
+
+svg.append("path")
+    .datum({type: "LineString", coordinates: [[180, -90], [180, 0], [180, 90]]})
+    .attr("class", "antimeridian")
+    .attr("d", path);
+
+svg.append("path")
+    .datum({type: "Sphere"})
+    .attr("class", "graticule")
+    .attr("d", path);
+
+d3.json("world-110m.json", function(error, world) {
+  var country = svg.selectAll(".country")
+      .data(topojson.feature(world, world.objects.countries).features)
+    .enter().append("g")
+      .attr("class", "country");
+  country.append("path")
+      .attr("class", "land")
+      .attr("d", path);
+  country.append("path")
+      .datum(boundsPolygon(d3.geo.bounds))
+      .attr("class", "bounds")
+      .attr("d", path);
+});
+
+function boundsPolygon(b) {
+  return function(geometry) {
+    var bounds = b(geometry);
+    if (bounds[0][0] === -180 && bounds[0][1] === -90 && bounds[1][0] === 180 && bounds[1][1] === 90) {
+      return {type: "Sphere"};
+    }
+    if (bounds[0][1] === -90) bounds[0][1] += 1e-6;
+    if (bounds[1][1] === 90) bounds[0][1] -= 1e-6;
+    if (bounds[0][1] === bounds[1][1]) bounds[1][1] += 1e-6;
+
+    return {
+      type: "Polygon",
+      coordinates: [
+        [bounds[0]]
+          .concat(parallel(bounds[1][1], bounds[0][0], bounds[1][0]))
+          .concat(parallel(bounds[0][1], bounds[0][0], bounds[1][0]).reverse())
+      ]
+    };
+  };
+}
+
+function parallel(φ, λ0, λ1) {
+  if (λ0 > λ1) λ1 += 360;
+  var dλ = λ1 - λ0,
+      step = dλ / Math.ceil(dλ);
+  return d3.range(λ0, λ1 + .5 * step, step).map(function(λ) { return [normalise(λ), φ]; });
+}
+
+function bounds2d(d) {
+  var x0, y0, x1, y1;
+  x1 = y1 = -(x0 = y0 = Infinity);
+  d3.geo.stream(d, {
+    point: function(x, y) {
+      if (x < x0) x0 = x;
+      if (x > x1) x1 = x;
+      if (y < y0) y0 = y;
+      if (y > y1) y1 = y;
+    },
+    lineStart: noop,
+    lineEnd: noop,
+    polygonStart: noop,
+    polygonEnd: noop
+  });
+  return [[x0, y0], [x1, y1]];
+}
+
+function noop() {}
+
+(function() {
+
+var width = 300,
+    height = width / 2;
+
+var circle = d3.geo.circle();
+
+var projection = d3.geo.equirectangular()
+    .translate([width / 2, height / 2])
+    .scale(width / (2 * Math.PI) - 2)
+    .precision(.1);
+
+var path = d3.geo.path()
+    .pointRadius(1)
+    .projection(projection);
+
+var example = d3.selectAll(".example")
+    .data([
+      {type: "MultiPoint", coordinates: d3.range(20).map(function() { return [normalise(160 + 40 * Math.random()), 45 * Math.random()]; })},
+      {type: "LineString", coordinates: [[150, 10], [-150, 0]]},
+      {type: "LineString", coordinates: [[-45, 45], [45, 45]]},
+      circle.origin([180, 0]).angle(150)(),
+      {type: "Polygon", coordinates: [
+        [[-60, -30], [60, -30], [180, -30], [-60, -30]],
+        [[-60, -60], [180, -60], [60, -60], [-60, -60]]
+      ]},
+      {type: "Polygon", coordinates: [
+        [[-60, -30], [60, -30], [180, -30], [-60, -30]]
+      ]}
+    ])
+  .selectAll("svg")
+    .data(function(d) {
+      return [bounds2d, d3.geo.bounds].map(function(bounds) {
+        return {bounds: boundsPolygon(bounds)(d), object: d};
+      });
+    })
+  .enter().append("svg")
+    .attr("width", width)
+    .attr("height", height + 15);
+
+example.append("text")
+    .attr("text-anchor", "middle")
+    .attr("transform", "translate(" + [width / 2, height] + ")")
+    .attr("dy", "1em")
+    .text(function(_, i) { return (i ? "Correct" : "Naïve 2D") + " Algorithm"; });
+
+example.append("path")
+    .datum(function(d) { return d.object; })
+    .attr("class", function(d) { return "feature " + d.type; })
+    .attr("d", path);
+
+example.append("path")
+    .datum(function(d) { return d.bounds; })
+    .attr("class", "bounds")
+    .attr("d", path);
+
+example.append("path")
+    .datum(graticule)
+    .attr("class", "graticule")
+    .attr("d", path);
+
+example.append("path")
+    .datum({type: "Sphere"})
+    .attr("class", "outline")
+    .attr("d", path);
+
+d3.select("#inside").append("svg")
+    .attr("width", 16)
+    .attr("height", 16)
+  .append("rect")
+    .style("fill", "url(#hatch)")
+    .style("stroke", "#000")
+    .style("stroke-width", "2px")
+    .attr("width", 16)
+    .attr("height", 16);
+
+})();
+
+function normalise(x) {
+  return (x + 180) % 360 - 180;
+}
+    
+}
+
+function simpleGlobe()
+{
+    var width = 960,
+    height = 500,
+    rotate = [10, -10],
+    velocity = [.003, -.001],
+    time = Date.now();
+
+var projection = d3.geo.orthographic()
+    .scale(240)
+    .translate([width / 2, height / 2])
+    .clipAngle(90 + 1e-6)
+    .precision(.3);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var graticule = d3.geo.graticule();
+
+var svg = d3.select("#globe").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .call(d3.behavior.drag()
+      .origin(function() { var rotate = projection.rotate(); return {x: 2 * rotate[0], y: -2 * rotate[1]}; })
+      .on("drag", function() {
+        projection.rotate([d3.event.x / 2, -d3.event.y / 2, projection.rotate()[2]]);
+        svg.selectAll("path").attr("d", path);
+      }));
+
+svg.append("path")
+    .datum({type: "Sphere"})
+    .attr("class", "sphere")
+    .attr("d", path);
+
+svg.append("path")
+    .datum(graticule)
+    .attr("class", "graticule")
+    .attr("d", path);
+
+svg.append("path")
+    .datum({type: "LineString", coordinates: [ [-180,0],[-90,0]]})
+    .attr("class", "equator")
+    .attr("d", path)
+.append("text")
+    .attr("y", 6)
+    .text("Equator");
+    
+//attempt polygon
+ svg.append("path")
+    .datum({type: "Polygon", coordinates: [
+        [ [0,-90],[0,90],[90,0],[0,0] ]
+       /*[[-90, 0], [-180, 0],[0,-90],[-180,0]]*/
+      ]})
+    .attr("class","polygon")
+    .style("fill","red")
+    .style("stroke","blue")
+    .attr("d",path);
+
+var feature = svg.selectAll("path");
+/*
+d3.timer(function() {
+  var dt = Date.now() - time;
+  projection.rotate([rotate[0] + velocity[0] * dt, rotate[1] + velocity[1] * dt]);
+  feature.attr("d", path);
+});*/
+    
+}

@@ -12,10 +12,10 @@ body {
 }
 #quickCal{
     width:  80%;
-    color:  white;
+    color:  #007dc5;
 }
 h1{
-	color: #18453B;
+	color: #007dc5;
 }
 
 /*force diagram*/
@@ -34,8 +34,8 @@ h1{
 text {
   font: 1em sans-serif;
   pointer-events: none;
-    fill:      white;
-    stroke:      white;
+    fill:      #007dc5;
+    stroke:      #007dc5;
 }
 .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
     background-color: #dc651e ;
@@ -47,7 +47,8 @@ text {
     background-image: linear-gradient(to bottom, #dc651e  0%, #dc651e  100%);
 }
 .ui-widget-content {
-    background: #007dc5;
+    background: white /*#007dc5*/;
+    border-color: #007dc5;
 }
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
     border: thin;
@@ -75,8 +76,8 @@ padding-bottom: 0px;
     margin-bottom:      5px;
 }
 .box{
-    width:              29em;
-    color:              white;
+    width:              31em;
+    color:              #007dc5;
     padding:            1em;
 	margin-left:		1em;
     margin-top:         1em;
@@ -99,9 +100,68 @@ button{
     border:             none;
 }
 #heading{
-    color:              white ;
+    color:              #007dc5 ;
     font-size:          1em;
 }
 input{
     font-size:  1em;
 }
+/*globe*/
+path {
+  fill: none;
+  stroke-linejoin: round;
+}
+.polygon{
+  fill-opacity: .25;
+}
+
+.sphere,
+.graticule {
+  stroke: #aaa;
+  fill-opacity: .25;
+}
+
+.equator {
+  stroke: red;
+  stroke-width: 2px;
+}
+.background {
+  stroke: none;
+  fill: #eef;
+}
+.land {
+  stroke-width: .75px;
+  pointer-events: all;
+}
+.graticule {
+  stroke: #333;
+  stroke-width: .25px;
+}
+.bounds {
+  fill: #f00;
+  fill-opacity: .25;
+  stroke: #000;
+  stroke-width: 1px;
+  pointer-events: none;
+}
+.country:hover .bounds {
+  stroke-width: 2px;
+}
+.country:hover .land {
+  stroke-width: 1px;
+}
+.outline {
+  stroke: #000;
+  stroke-width: 1.5px;
+  fill: none;
+}
+.antimeridian {
+  stroke-dasharray: 5 5;
+}
+
+.example path.Polygon {
+  fill: url(#hatch);
+}
+.example text {
+  font-size: 11px;
+  font-family: sans-serif;

@@ -4,8 +4,8 @@
         <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" /> 
         <link rel="stylesheet" type="text/css" href="style.css" />  
         
-        
         <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="http://d3js.org/topojson.v1.min.js"></script>
         <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
@@ -16,60 +16,64 @@
 
 <body>
     <div align="center">
-  <h1>Still under Construction!</h1>
-  Until then here is a link to my old site <a href="http://www.msu.edu/~slonczti">Tim Sloncz Old Site</a>
+    <h1>Still under Construction!</h1>
+    Until then here is a link to my old site <a href="http://www.msu.edu/~slonczti">Tim Sloncz Old Site</a>
     
     <div id="tabs">
-  <ul>
-    <li><a href="#aboutMe">AboutMe</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#resume">Resume</a></li>
-  </ul>
-  <div id="aboutMe">
-    <div id="forceLayout">
-        Go ahead, movie it around
-    </div>
-  </div>
-  <div id="projects">
-    <div id='quickCal' align='left' >          
-              I use google calendar to keep track of my events. Going to each individual
-              event to add reminders took too long so I created this.  If you use
-              google calendars you can login using your google account and add a
-              reminder to each event maching your search. It's still underconstruction
-              but the base is here.<br />
-              <button id='authorize-button' onclick='handleAuthClick();'>Login</button>
-              <div class = 'box' id = 'eventStats'>
-                  <div id='heading'>
-                    Returns the number of events that contain your search criteria.         </div>
-                  <h4>
-                      <input type="text" id="query" size="30em"/>
-                      <button class="calButton" id='query-button' onclick='eventStats();'>Search</button>
-                      <br />
-                      <br />
-                  <div id = 'eventStatsResult'>
-                  </div>
-                  </h4>
-              </div>
-              <div class = 'box' id = 'addReminder'>
-                  <div id='heading'>
-                    Adds reminders to all events matching search criteria
-                  </div>
-                  <h4>
-                      <input type="text" id="reminderQuery" size="30em"/>
-                      <button  class="calButton" id='authorize-button' onclick='massReminder();'>Add Reminder</button><br />
-                      <input type="radio" name="reminder" value="big">Big (Email 7, 4, and 2 days prior)<br />
-                      <input type="radio" name="reminder" value="little">Little (Email 1 day prior and popup 2 hours prior) <br />
-                      <input type="radio" name="reminder" value="remove">Remove reminders <br /><br />
-                      <div id='reminderResults'>
+      <ul>
+        <li><a href="#aboutMe">AboutMe</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#globe">Globe</a></li>
+        <li><a href="#resume">Resume</a></li>
+      </ul>
+      <div id="aboutMe">
+        <div id="forceLayout">
+            Go ahead, movie it around
+        </div>
+      </div>
+      <div id="projects">
+        <div id='quickCal' align='left' >          
+                  I use google calendar to keep track of my events. Going to each individual
+                  event to add reminders took too long so I created this.  If you use
+                  google calendars you can login using your google account and add a
+                  reminder to each event maching your search. It's still underconstruction
+                  but the base is here.<br />
+                  <button id='authorize-button' onclick='handleAuthClick();'>Login</button>
+                  <div class = 'box' id = 'eventStats'>
+                      <div id='heading'>
+                        Returns the number of events that contain your search criteria.         
+                      </div>
+                      <h4>
+                          <input type="text" id="query" size="30em"/>
+                          <button class="calButton" id='query-button' onclick='eventStats();'>Search</button>
+                          <br />
+                          <br />
+                      <div id = 'eventStatsResult'>
                       </div>
                       </h4>
+                  </div>
+                  <div class = 'box' id = 'addReminder'>
+                      <div id='heading'>
+                        Adds reminders to all events matching search criteria
+                      </div>
+                          <input type="text" id="reminderQuery" size="30em"/>
+                          <button  class="calButton" id='authorize-button' onclick='massReminder();'>Add Reminder</button><br />
+                          <input type="radio" name="reminder" value="big">Big (Email 7, 4, and 2 days prior)<br />
+                          <input type="radio" name="reminder" value="little">Little (Email 1 day prior and popup 2 hours prior) <br />
+                          <input type="radio" name="reminder" value="remove">Remove reminders 
+                          <br /><br />
+                          <div id='reminderResults'>
+                      </div>
             </div>
+        </div>
+      </div><!-- end projects-->
+      <div id="resume">
+          <img src="tSlonczResume.png" alt="My Resume" height="900em" width="700em">
+      </div><!-- end resume-->
+      <div id="globe">
+          <div id="globeDiv" align="left">
+          </div>
+      </div><!-- end globe-->
     </div>
-  </div><!-- end projects-->
-  <div id="resume">
-    <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-    <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
-  </div>
-</div>
 </div>
 </body>
