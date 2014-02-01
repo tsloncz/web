@@ -1,16 +1,25 @@
 $( document ).ready(function(){
+    
+    $.getJSON( "insert.php")
+        .done( function( data ) {
+            console.log(data.language); 
+            console.log(data.level);
+        });//end .done
+    
 	//initialize tabs when page first loads
-	$( "#tabs" ).tabs();
+	//$( "#tabs" ).tabs();
     simpleGlobe();
+    $( "#accordion" ).accordion();
     //Open Resume
     /*$("#resumeDiv").load('TimothySlonczResume.htm');*/
-            
+    var education = "MSU";
 
     //force diagram
     var links = [
   {source: "Me", target: "Platforms", type: "main"},
   {source: "Me", target: "Languages", type: "main"},
   {source: "Me", target: "Interests", type: "main"},
+  {source: "Me", target: education, type: "main"},
   {source: "Interests", target: "Web Apps", type: "main"},
   {source: "Interests", target: "Big Data", type: "main"},
   {source: "Platforms", target: "Mac", type: "sub"},

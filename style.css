@@ -2,6 +2,20 @@ body {
   font: 1em sans-serif;
     align-self: center;
 }
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    background-image: linear-gradient(to bottom, #02B635 0%, #18453B 100%);
+    color: white;
+}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    background-image: linear-gradient(to bottom, #12A0FF 0%, #0E3C63 100%);
+}
+.ui-accordion .ui-accordion-content {
+    height: 28em;
+}
+h3{
+    font-size: 1.5em;
+    font-family: arial;
+}
 #tabs{
     width:  80%;
     align-self: center;
@@ -39,11 +53,9 @@ text {
 }
 .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
     background-color: #dc651e ;
-    border: none;
     color: white;
 }
 .ui-widget-header{
-    border: none;
     background-image: linear-gradient(to bottom, #dc651e  0%, #dc651e  100%);
 }
 .ui-widget-content {

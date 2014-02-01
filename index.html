@@ -18,7 +18,7 @@
     <div align="center">
     <h1>Still under Construction!</h1>
     Until then here is a link to my old site <a href="http://www.msu.edu/~slonczti">Tim Sloncz Old Site</a>
-    
+    <!--
     <div id="tabs">
       <ul>
         <li><a href="#aboutMe">AboutMe</a></li>
@@ -66,14 +66,67 @@
                       </div>
             </div>
         </div>
-      </div><!-- end projects-->
+      </div><!-- end projects--
       <div id="resume">
           <img src="tSlonczResume.png" alt="My Resume" height="900em" width="700em">
-      </div><!-- end resume-->
+      </div><!-- end resume--
       <div id="globe">
           <div id="globeDiv" align="left">
           </div>
-      </div><!-- end globe-->
-    </div>
+      </div><!-- end globe--
+    </div>-->
+        
+    <div id="accordion">
+        <h3>About Me</h3>
+        <div id ="aboutMe">
+            <div id="forceLayout">
+            Go ahead, movie it around
+            </div>
+        </div>
+        <h3>Projects</h3>
+            <div id='quickCal' align='left' >          
+                  I use google calendar to keep track of my events. Going to each individual
+                  event to add reminders took too long so I created this.  If you use
+                  google calendars you can login using your google account and add a
+                  reminder to each event maching your search. It's still underconstruction
+                  but the base is here.<br />
+                  <button id='authorize-button' onclick='handleAuthClick();'>Login</button>
+                  <div class = 'box' id = 'eventStats'>
+                      <div id='heading'>
+                        Returns the number of events that contain your search criteria.         
+                      </div>
+                      <h4>
+                          <input type="text" id="query" size="30em"/>
+                          <button class="calButton" id='query-button' onclick='eventStats();'>Search</button>
+                          <br />
+                          <br />
+                      <div id = 'eventStatsResult'>
+                      </div>
+                      </h4>
+                  </div>
+                  <div class = 'box' id = 'addReminder'>
+                      <div id='heading'>
+                        Adds reminders to all events matching search criteria
+                      </div>
+                          <input type="text" id="reminderQuery" size="30em"/>
+                          <button  class="calButton" id='authorize-button' onclick='massReminder();'>Add Reminder</button><br />
+                          <input type="radio" name="reminder" value="big">Big (Email 7, 4, and 2 days prior)<br />
+                          <input type="radio" name="reminder" value="little">Little (Email 1 day prior and popup 2 hours prior) <br />
+                          <input type="radio" name="reminder" value="remove">Remove reminders 
+                          <br /><br />
+                          <div id='reminderResults'>
+                            </div>
+                </div>
+            </div>
+        <h3>Globe</h3>
+        <div id='globe'>
+            <div id="globeDiv" align="left">
+            </div>
+        </div>
+        <h3>Resume</h3>
+            <div>
+                <img src="tSlonczResume.png" alt="My Resume" height="900em" width="700em">
+            </div>
+    </div><!-- end accordian -->
 </div>
 </body>
