@@ -1,6 +1,6 @@
 <?php
-
-$mysqli = new mysqli("mysql-user.cse.msu.edu", "slonczti", "A46479597");
+include 'vars.php';
+$mysqli = new mysqli($host, $user, $pass,$db);
 
 /* check connection */
 if (mysqli_connect_errno()) {
@@ -15,11 +15,22 @@ $lastName = $_POST['lastname'];
 /* print host information */
 //echo "Host info: " . $mysqli->host_info . '<br />';
 
-$dispQuery ="Select language, level from languages";
+$forceQuery ="Select source,target,type,value from links";
+$forceResult = $mysqli->query($forceQuery);
+while($row = $forceResult->fetch_array())
+{
+    $rows[] = $row;
+}
+foreach($rows as $row )
+{
+    $force[] = array("source"=>$row['source'],"target"=>$row['target'],"type"=>$row['type'],"value"=>$row['value']);
+}
+$forceResult->free();
+
+$dispQuery ="Select firstName,lastName from guests";
 $dispResult = $mysqli->query($dispQuery);
 $fName = Array();
 $lName = Array();
-$age = Array();
 
 while($row = $dispResult->fetch_array())
 {
@@ -27,10 +38,9 @@ while($row = $dispResult->fetch_array())
 }
 foreach($rows as $row )
 {
-    $language[] = array("value"=>$row['language']);
-    $level[] = array("value"=>$row['level']);
+    $name[] = array("firstname"=>$row['firstName'],"lastname"=>$row['lastName']);
 }
-$results= array("language"=>$language,"level"=>$lName);
+$results= array("name"=>$name,"forceDiagram"=>$force);
 echo json_encode($results);
 
 

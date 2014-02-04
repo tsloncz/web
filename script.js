@@ -1,18 +1,119 @@
+
+var id;
+var key;
+var scopes
 $( document ).ready(function(){
-    
-    $.getJSON( "insert.php")
-        .done( function( data ) {
-            console.log(data.language); 
-            console.log(data.level);
+    //gather required db connection variables from sources
+    $.getJSON( "vars.json", function( data ) {
+        id = data.id;
+        key = data.key;
+        scopes = data.scopes;
+        console.log(id+" "+key+" "+scopes);
+    });
+    $.getJSON( "insert.php", function( data ) {
+            console.log(data.forceDiagram);
+            createMeForceDb(data);
         });//end .done
-    
+    //createMeForceLocal();
 	//initialize tabs when page first loads
 	//$( "#tabs" ).tabs();
     simpleGlobe();
     $( "#accordion" ).accordion();
     //Open Resume
     /*$("#resumeDiv").load('TimothySlonczResume.htm');*/
-    var education = "MSU";
+   
+
+});//end document on ready ****************************
+
+
+//Creates force diagram of my data from db
+function createMeForceDb(json)
+{
+    var vals = [];
+    $.each(json.forceDiagram, function(i){
+        vals[i] = this.value;
+    })
+    console.log(vals);
+//var json = jQuery.parseJSON(data);
+var links = json.forceDiagram;
+    console.log("Links: " +links);
+var nodes = {};
+
+// Compute the distinct nodes from the links.
+links.forEach(function(link) {
+  link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+  link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+  link.level = nodes[link.level] || (nodes[link.level] = {name: link.level});
+});
+
+var width = 760,
+    height = 400;
+
+var force = d3.layout.force()
+    .nodes(d3.values(nodes))
+    .links(links)
+    .size([width, height])
+    .linkDistance(60)
+    .charge(-300)
+    .on("tick", tick)
+    .start();
+
+var svg = d3.select("#aboutMe").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var link = svg.selectAll(".link")
+    .data(force.links())
+  .enter().append("line")
+    .attr("class", "link");
+
+var node = svg.selectAll(".node")
+    .data(force.nodes())
+  .enter().append("g")
+    .attr("class", function(d){ return "node";})
+    .on("mouseover", mouseover)
+    .on("mouseout", mouseout)
+    .call(force.drag);
+
+node.append("circle")
+    .data(vals)
+    .attr("r",  function(d) {var x=d*2;console.log(x);return x; });
+
+node.append("text")
+    .attr("x", 12)
+    .attr("dy", ".35em")
+    .text(function(d) { return d.name; });
+
+function tick() {
+  link
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+
+  node
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+}
+
+function mouseover() {
+  d3.select(this).select("circle").transition()
+      .duration(750)
+      .attr("r", 16);
+}
+
+function mouseout() {
+  d3.select(this).select("circle").transition()
+      .duration(750)
+      .attr("r", 8);
+}
+
+}
+
+
+//Creates force diagram of my data(static data)
+function createMeForce()
+{
+     var education = "MSU";
 
     //force diagram
     var links = [
@@ -51,6 +152,7 @@ var force = d3.layout.force()
     .charge(-300)
     .on("tick", tick)
     .start();
+    alert(force.nodes);
 
 var svg = d3.select("#aboutMe").append("svg")
     .attr("width", width)
@@ -100,14 +202,10 @@ function mouseout() {
       .attr("r", 8);
 }
 
-
-});
+}
 
 
 //calendar
-var clientId = '131607012182-sh7foh8q2r7hniu03jeeenrrjhrahmse.apps.googleusercontent.com';
-var apiKey = 'AIzaSyCBUxdJ_WJNK_jfIRdDqLE6o-06qrKUi6E';
-var scopes = 'https://www.googleapis.com/auth/calendar';
 
 //3 predefined reminders
 var bigReminder ={
@@ -154,13 +252,13 @@ var removeReminder ={
 }
         
 function handleClientLoad() {
-  gapi.client.setApiKey(apiKey);
+  gapi.client.setApiKey(key);
   window.setTimeout(checkAuth,1);
   checkAuth();
 }
 
 function checkAuth() {
-  gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true},
+  gapi.auth.authorize({client_id: id, scope: scopes, immediate: true},
       handleAuthResult);
 }
 
@@ -179,7 +277,7 @@ function handleAuthResult(authResult) {
 
 function handleAuthClick(event) {
   gapi.auth.authorize(
-      {client_id: clientId, scope: scopes, immediate: false},
+      {client_id: id, scope: scopes, immediate: false},
       handleAuthResult);
   return false;
 }
